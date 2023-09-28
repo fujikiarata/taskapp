@@ -8,8 +8,9 @@
 import UIKit
 import RealmSwift
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var searchBar: UISearchBar!
     
     // Realmインスタンスを取得する
     let realm = try! Realm()  // ←追加
@@ -25,6 +26,20 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         tableView.fillerRowHeight = UITableView.automaticDimension
         tableView.delegate = self
         tableView.dataSource = self
+        searchBar.delegate = self
+        
+        searchBar.placeholder = "ここに入力してください"
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchText.isEmpty {
+            taskArray = try! Realm().objects(Task.self).sorted(byKeyPath: "date", ascending: true)
+        } else {
+            taskArray = try! Realm().objects(Task.self)
+                .filter("category == %@", searchText).sorted(byKeyPath: "date", ascending: true)
+        }
+        print(taskArray)
+        tableView.reloadData()
     }
     
     // データの数（＝セルの数）を返すメソッド
