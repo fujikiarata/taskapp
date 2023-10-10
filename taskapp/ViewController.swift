@@ -27,7 +27,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         tableView.delegate = self
         tableView.dataSource = self
         searchBar.delegate = self
-        
         searchBar.placeholder = "ここに入力してください"
     }
     
